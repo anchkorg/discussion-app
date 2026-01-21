@@ -1,13 +1,17 @@
 // import { PrismaClient } from "@/app/generated/prisma/client"; 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from "@prisma/client";
+import { Pool } from 'pg';
 
-
-// ✅ Pass an object with the 'url' property
-const adapter = new PrismaBetterSqlite3({ 
-  url: 'file:./dev.db' 
+const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: true,  // 驗證伺服器證書
+  }
 });
 
-export const db = new PrismaClient({ 
-  adapter 
+const adapter = new PrismaPg(pool);
+
+export const db = new PrismaClient({
+  adapter
 });

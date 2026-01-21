@@ -13,7 +13,9 @@ export default async function CommentList({ postId }: CommentListProps) {
   const topLevelComments = comments.filter(
     (comment) => comment.parentId === null
   );
+
   const renderedComments = topLevelComments.map((comment) => {
+   
     return (
       <CommentShow
         key={comment.id}

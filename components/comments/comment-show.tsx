@@ -5,6 +5,7 @@ import CommentCreateForm from "@/components/comments/comment-create-form";
 import { fetchCommentsByPostId } from '@/db/queries/comments';
 import CommentDeleteForm from './comment-delete-form';
 import CommentEditForm from './comment-edit-form';
+import { auth } from "@/auth";
 
 interface CommentShowProps {
   commentId: string;
@@ -20,6 +21,8 @@ export default async function CommentShow({ commentId , postId}: CommentShowProp
   if (!comment) {
     return null;
   }
+  const session = await auth();
+  const isOwner = session?.user?.id === comment.userId;
 
   const children = comments.filter((c) => c.parentId === commentId);
   const renderedChildren = children.map((child) => {
@@ -44,8 +47,8 @@ export default async function CommentShow({ commentId , postId}: CommentShowProp
               {comment.user.name}
             </p>
             <div className="flex items-center gap-2">
-              <CommentEditForm postId={comment.postId} parentId={comment.id} commentId={comment.id}/>
-              <CommentDeleteForm commentId={comment.id} />
+              {isOwner && <CommentEditForm postId={comment.postId} parentId={comment.id} commentId={comment.id}/>}
+              {isOwner && <CommentDeleteForm commentId={comment.id} />}
             </div>
           </div>
           <p className="text-gray-900">{comment.content}</p>

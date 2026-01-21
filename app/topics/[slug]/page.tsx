@@ -22,7 +22,7 @@ export default async function TopicShowPage({params}:TopicShowPageProps){
     });
 
     if (!topic) return <div>Topic not found</div>;
-    
+
     const isOwner = session?.user?.id === topic.userId;
 
     return (<div className="grid grid-cols-4 gap-4 p-4">
